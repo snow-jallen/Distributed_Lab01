@@ -9,6 +9,11 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Worker", "Worker\Worker.csproj", "{81027CE3-AE8A-4135-AC39-98812B57B44E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7C363196-9C44-4256-AD7F-3C068BDDC710}"
+	ProjectSection(SolutionItems) = preProject
+		start-cluster.ps1 = start-cluster.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

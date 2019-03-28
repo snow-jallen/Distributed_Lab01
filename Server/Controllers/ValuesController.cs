@@ -9,33 +9,46 @@ using Shared;
 
 namespace Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ValuesController : ControllerBase
     {
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<Job>> GetWork()
         {
-            return new string[] { "value1", "value2" };
+            return new[]
+            {
+                new Job(new []{new MessageDto("A","1"),
+                               new MessageDto("B","1"),
+                               new MessageDto("C","1"),
+                               new MessageDto("D","1"),
+                               new MessageDto("E","1")}),
+                new Job(new []{new MessageDto("B","2"),
+                               new MessageDto("D","2"),
+                               new MessageDto("E","2"),
+                               new MessageDto("F","2"),
+                               new MessageDto("G","2")}),
+                new Job(new []{new MessageDto("C","3"),
+                               new MessageDto("A","3"),
+                               new MessageDto("B","3"),
+                               new MessageDto("D","3"),
+                               new MessageDto("G","3")})
+            };
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(string key)
-        {
-            if(System.IO.File.Exists(key))
-                return System.IO.File.ReadAllText(key);
-            return null;
-        }
 
         // POST api/values
         [HttpPost]
-        public ActionResult<MessageDto> Post([FromBody]MessageDto msg)
+        public ActionResult<Job> DoJob([FromBody]Job job)
         {
-            System.IO.File.WriteAllText(msg.Key, msg.Value);
-            msg.Result = $"Saved on server at {DateTime.Now}";
-            return msg;
+            foreach (var msg in job.Messages)
+            {
+                System.IO.File.WriteAllText(msg.Key, msg.Value);
+                Console.WriteLine($"{msg.Key} / {msg.Value}");
+            }
+            job.Result = $"Saved on server at {DateTime.Now}";
+            return job;
         }
     }  
 }

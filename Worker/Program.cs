@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.Extensions;
+using System.Collections.Generic;
 
 namespace Distributed_Lab01
 {
@@ -24,16 +25,17 @@ namespace Distributed_Lab01
             Console.WriteLine("Sleeping...");
             Thread.Sleep(TimeSpan.FromSeconds(5));
 
-            var response = await client.GetStringAsync("http://server/api/values");
-            Console.WriteLine(response);
+            var response = await client.GetStringAsync("http://server/api/values/GetWork");
+            var jobs = JsonConvert.DeserializeObject<IEnumerable<Job>>(response);
 
-            var msg = new MessageDto(DateTime.Now.Ticks.ToString(), Environment.MachineName);
-            var content2 = new StringContent(JsonConvert.SerializeObject(msg), Encoding.UTF8, "application/json");
-            var response3 = await client.PostAsync("http://server/api/values", content2);
-            var stringResponse = await response3.Content.ReadAsStringAsync();
-            var responseMessage = JsonConvert.DeserializeObject<MessageDto>(stringResponse);
-            
-            Console.WriteLine("Result from server: " + responseMessage.Result);
+            foreach(var job in jobs)
+            {
+                var content = new StringContent(JsonConvert.SerializeObject(job), Encoding.UTF8, "application/json");
+                var httpResponse = await client.PostAsync("http://server/api/values/DoJob", content);
+                var stringResponse = await httpResponse.Content.ReadAsStringAsync();
+                var responseJob = JsonConvert.DeserializeObject<Job>(stringResponse);
+                Console.WriteLine("Result from server: " + responseJob.Result);
+            }            
         }
     }
 }

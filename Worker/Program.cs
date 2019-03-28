@@ -26,15 +26,14 @@ namespace Distributed_Lab01
             Thread.Sleep(TimeSpan.FromSeconds(5));
 
             Console.WriteLine("Getting work");
-            var response = await client.GetStringAsync("http://server/api/values/GetWork");
+            var response = await client.GetStringAsync("http://server/api/values/GetWork");            
             var jobs = JsonConvert.DeserializeObject<IEnumerable<Job>>(response);
             Console.WriteLine("Got work.");
 
             foreach(var job in jobs)
             {
                 Console.WriteLine("Submitting job to server...");
-                var content = new StringContent(JsonConvert.SerializeObject(job), Encoding.UTF8, "application/json");
-                var httpResponse = await client.PostAsync("http://server/api/values/DoJob", content);
+                var httpResponse = await client.PostAsJsonAsync("http://server/api/values/DoJob", job);                
                 var stringResponse = await httpResponse.Content.ReadAsStringAsync();
                 var responseJob = JsonConvert.DeserializeObject<Job>(stringResponse);
                 Console.WriteLine("Result from server: " + responseJob.Result);

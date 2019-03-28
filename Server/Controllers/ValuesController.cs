@@ -6,9 +6,29 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Shared;
+using System.Threading;
 
 namespace Server.Controllers
 {
+    public static class Counter
+    {
+        private static long currentRequests;
+        public static long CurrentRequests
+        {
+            get { return Interlocked.Read(ref currentRequests); }
+        }
+
+        internal static void Increment()
+        {
+            Interlocked.Increment(ref currentRequests);
+        }
+
+        internal static void Decrement()
+        {
+            Interlocked.Decrement(ref currentRequests);
+        }
+    }
+
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class ValuesController : ControllerBase
@@ -42,12 +62,15 @@ namespace Server.Controllers
         [HttpPost]
         public ActionResult<Job> DoJob([FromBody]Job job)
         {
+            Counter.Increment();
+            Console.WriteLine($"Current Users: {Counter.CurrentRequests}");
             foreach (var msg in job.Messages)
             {
                 System.IO.File.WriteAllText(msg.Key, msg.Value);
                 Console.WriteLine($"{msg.Key} / {msg.Value}");
             }
-            job.Result = $"Saved on server at {DateTime.Now}";
+            job.Result = $"Saved on server at {DateTime.Now} (Current Users: {Counter.CurrentRequests})";
+            Counter.Decrement();
             return job;
         }
     }  

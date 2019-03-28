@@ -19,6 +19,11 @@ namespace Server
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureKestrel((context, options) =>
+                {
+                    // Set properties and call methods on options
+                    
+                })
                 .UseStartup<Startup>();
     }
 }

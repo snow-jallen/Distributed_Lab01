@@ -42,7 +42,7 @@ namespace Server
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseMvc();            
         }
     }
 }

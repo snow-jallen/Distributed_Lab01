@@ -7,6 +7,9 @@ FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
 WORKDIR /src
 COPY ["Server/Server.csproj", "Server/"]
 RUN dotnet restore "Server/Server.csproj"
+COPY ["Shared/Shared.csproj", "Shared/"]
+COPY ["Shared/*.cs", "Shared/"]
+RUN dotnet restore "Shared/Shared.csproj"
 COPY . .
 WORKDIR "/src/Server"
 RUN dotnet build "Server.csproj" -c Release -o /app

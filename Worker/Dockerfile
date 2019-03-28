@@ -1,12 +1,17 @@
 FROM mcr.microsoft.com/dotnet/core/runtime:2.2-stretch-slim AS base
 WORKDIR /app
 
+
+
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
 WORKDIR /src
-COPY ["Worker.csproj", "Worker/"]
+COPY ["Worker/Worker.csproj", "Worker/"]
 RUN dotnet restore "Worker/Worker.csproj"
-WORKDIR "/Worker"
+COPY ["Shared/Shared.csproj", "Shared/"]
+COPY ["Shared/*.cs", "Shared/"]
+RUN dotnet restore "Shared/Shared.csproj"
 COPY . .
+WORKDIR "/src/Worker"
 RUN dotnet build "Worker.csproj" -c Release -o /app
 
 FROM build AS publish

@@ -18,8 +18,8 @@ services:
   worker:
     image: ${DOCKER_REGISTRY-}worker
     build:
-      context: Worker
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Worker/Dockerfile
     networks:
       internalNet:
         aliases:

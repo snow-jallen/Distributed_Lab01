@@ -22,7 +22,9 @@ namespace Shared
             Messages = messages;
         }
 
-        public string Result { get; set; }
+        public string ResultMessage { get; set; }
+        public bool Success { get; set; }
+        public string Requestor { get; set; }
         public IEnumerable<MessageDto> Messages { get; }
     }
 }

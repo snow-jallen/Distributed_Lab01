@@ -5,6 +5,9 @@ services:
     image: ${DOCKER_REGISTRY-}server
     environment:
       ASPNETCORE_ENVIRONMENT: Development    
+      ALLOWED_FAILURES: 10
+      WAIT_AFTER_SUCCESS: .7
+      WAIT_AFTER_FAILURE: .25
     build:
       context: .
       dockerfile: Server/Dockerfile
@@ -15,6 +18,8 @@ services:
 
   worker:
     image: ${DOCKER_REGISTRY-}worker
+    depends_on:
+    - server
     build:
       context: .
       dockerfile: Worker/Dockerfile
